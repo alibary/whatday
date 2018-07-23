@@ -1,0 +1,422 @@
+#!/bin/sh 
+########################################################################
+#
+#         日期计算程序   蒋农 2006.7.3
+#
+# 本程序可以按指定的基准日期计算今天、昨天、明天、月初、月末、年初、年末
+# 等日期，并按YYYYMMDD格式返回，也可以取得指定日期的年、月、日。
+#
+# 语法：  whatday [计算关键字]...
+#
+# 帮助：  whatday help
+#
+# 更新记录：
+# 2010.7.1 增加了计算N天以后或N天以前的日期的功能
+# 2010.7.1 增加了上月同期功能
+# 2010.7.1 提高了计算效率
+# 2011.2.19 增加了季初季末
+# 2011.9.20 增加了时间：0:0:0-23：59：59
+# 2013.2.18 修正了上年同期中有关闰年的定义： lastyear(2013-2-28)=2012-2-29
+# 2014.3.25 增加了下年、下月
+# 2014.3.26 可使用任意多个参数，从右至左依次计算日期
+# 2014.8.6  将错误信息输出到标准错误输出
+########################################################################
+
+get_date()
+{
+	printf "%04s%02s%02s\n" $1 $2 $3
+}
+
+get_time00()
+{
+	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+	printf "%04s-%02s-%02s 00:00:00\n" $Y $M $D
+}
+
+get_time23()
+{
+	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+	printf "%04s-%02s-%02s 23:59:59\n" $Y $M $D
+}
+
+get_year()
+{
+        expr substr $1 1 4
+}
+
+get_month()
+{
+        expr substr $1 5 2
+}
+
+get_day()
+{
+ 	expr substr $1 7 2
+}
+
+get_year_days()
+{
+	Y=$1
+
+   	r1=`expr $Y % 4`
+   	r2=`expr $Y % 100`
+   	r3=`expr $Y % 400`
+    	if [ r1 -eq 0 -a r2 -ne 0 -o r3 -eq 0 ]; then
+        	days=366
+    	else
+        	days=365
+    	fi
+    	echo $days
+}
+
+get_nextyear_days()
+{
+	Y=$1
+	M=$2
+	if [ $M -gt 2 ] ; then
+		Y=`expr $Y + 1`
+	fi
+	get_year_days $Y
+}
+
+get_prevyear_days()
+{
+	Y=$1
+	M=$2
+	if [ $M -le 2 ]; then
+		Y=`expr $Y - 1`
+	fi
+	get_year_days $Y
+}
+
+get_mon_days()
+{
+		Y=$1
+		M=$2
+        case $M in
+        1|01|3|03|5|05|7|07|8|08|10|12) 
+			days=31;;
+        4|04|6|06|9|09|11) 
+			days=30;;
+		2|02)
+			if [ `get_year_days $Y` -eq 366 ]; then
+                        days=29
+            else
+                        days=28
+            fi ;;
+		*) 
+			days=0;;
+        esac
+        echo $days
+}
+
+get_endyear()
+{
+	Y=`get_year $1`
+	get_date $Y 12 31
+}
+
+get_beginyear()
+{
+	Y=`get_year $1`
+ 	get_date $Y 1 1
+}
+
+get_beginmon()
+{
+	Y=`get_year $1`
+ 	M=`get_month $1`
+	get_date $Y $M 1
+}
+
+get_endmon()
+{
+	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	get_date $Y $M `get_mon_days $Y $M`
+}
+
+get_beginqtr()
+{
+	Y=`get_year $1`
+ 	M=`get_month $1`
+    case $M in
+        1|01|2|02|3|03)
+ 			get_date $Y 1 1;;
+		4|04|5|05|6|06)
+ 			get_date $Y 4 1;;
+		7|07|8|08|9|09)
+ 			get_date $Y 7 1;;
+		10|11|12) 
+ 			get_date $Y 10 1;;
+    esac
+}
+
+get_endqtr()
+{
+	Y=`get_year $1`
+ 	M=`get_month $1`
+    case $M in
+        1|01|2|02|3|03)
+ 			get_date $Y 3 31;;
+		4|04|5|05|6|06)
+ 			get_date $Y 6 30;;
+		7|07|8|08|9|09)
+ 			get_date $Y 9 30;;
+		10|11|12) 
+ 			get_date $Y 12 31;;
+    esac
+}
+
+get_nextdays()
+{
+ 	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+
+	D=`expr $D + $2`
+
+	days=`get_nextyear_days $Y $M`
+	while [ $D -gt $days ]; do
+		D=`expr $D - $days`
+		Y=`expr $Y + 1`
+		days=`get_nextyear_days $Y $M`
+	done
+
+	days=`get_mon_days $Y $M`
+	while [ $D -gt $days ]; do
+		D=`expr $D - $days`
+		M=`expr $M + 1`
+		if [ $M -gt 12 ]; then
+			M=1
+			Y=`expr $Y + 1`
+		fi
+		days=`get_mon_days $Y $M`
+	done
+
+ 	get_date $Y $M $D
+}
+
+get_prevdays()
+{
+ 	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+
+	D=`expr $D - $2`
+	
+	days=`get_prevyear_days $Y $M`
+	while [ $D -lt -$days ]; do
+		D=`expr $D + $days`
+		Y=`expr $Y - 1`
+		days=`get_prevyear_days $Y $M`
+	done
+
+	while [ $D -lt 1 ]; do
+		M=`expr $M - 1`
+		if [ $M -lt 1 ]; then
+			M=12
+			Y=`expr $Y - 1`
+		fi
+		days=`get_mon_days $Y $M`
+		D=`expr $D + $days`
+	done
+
+ 	get_date $Y $M $D
+}
+
+get_lastyear()
+{
+ 	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+
+ 	Y=`expr $Y - 1`
+	if [ $M = 02 -a $D -ge 28 ]; then
+		days=`get_mon_days $Y $M`
+		get_date $Y $M $days
+	else
+		get_date $Y $M $D
+	fi
+}
+
+get_nextyear()
+{
+ 	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+
+ 	Y=`expr $Y + 1`
+	if [ $M = 02 -a $D -ge 28 ]; then
+		days=`get_mon_days $Y $M`
+		get_date $Y $M $days
+	else
+		get_date $Y $M $D
+	fi
+}
+
+get_lastmon()
+{
+ 	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+
+ 	M=`expr $M - 1`
+	if [ $M -lt 1 ]; then
+		M=12
+		Y=`expr $Y - 1`
+	fi
+	days=`get_mon_days $Y $M`
+
+ 	if [ $D -gt $days ]; then
+		D=$days
+	fi
+
+	get_date $Y $M $D
+}
+
+get_nextmon()
+{
+ 	Y=`get_year $1`
+ 	M=`get_month $1`
+ 	D=`get_day $1`
+
+ 	M=`expr $M + 1`
+	if [ $M -gt 12 ]; then
+		M=1
+		Y=`expr $Y + 1`
+	fi
+	days=`get_mon_days $Y $M`
+
+ 	if [ $D -gt $days ]; then
+		D=$days
+	fi
+
+	get_date $Y $M $D
+}
+
+read_date()
+{
+	if [ "$1" == "-" ]; then
+		read today
+	else
+		today="$1"
+	fi
+	date=`expr $today : "\([1-2][0-9][0-9][0-9][01][0-9][0-3][0-9]\)"`
+	time=`expr $today : "\([1-2][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\)"`
+	if [ "$date" != "" ]; then
+		Y=`get_year $date`
+		M=`get_month $date`
+		D=`get_day $date`
+	elif [ "$time" != "" ]; then
+		Y=`expr substr $time 1 4`
+		M=`expr substr $time 6 2`
+		D=`expr substr $time 9 2`
+	else
+		formaterr
+	fi
+
+	if [ $M -lt 1 -o $M -gt 12 ]; then
+		formaterr
+	fi
+
+	days=`get_mon_days $Y $M`
+	if [ $D -lt 1 -o $D -gt $days ]; then
+		formaterr
+	fi
+
+	get_date $Y $M $D
+}
+
+formaterr()
+{
+	echo "日期格式错误. whatday help 获得帮助" >&2
+	exit 1
+}
+
+help()
+{
+echo '
+日期计算程序 V1.2.1 蒋农 (2014.8.6)
+
+语法：whatday [关键字]...
+
+关键字：
+	(无)或today 今天 		beginyear   年初
+	yesterday   昨天 		endyear     年末
+	tomorrow    明天 		begineqtr   季初
+	+N(N为整数) N天以后 		endqtr      季末
+	-N(N为整数) N天以前 		beginmon    月初
+	lastyear    上年同期 		endmon      月末
+	nextyear    下年同期 		beginday    日初（0点0分0秒）
+	lastmon     上月同期 		endday      日末（23点59分59秒）
+	nextmon     下月同期 		year        年份
+	-	    从标准输入读入日期 	month       月份
+	(YYYYMMDD)   指定日期 		day         日
+
+示例：
+1. 没有任何参数，返回当天的日期
+	whatday                         	返回当天的日期
+
+2. 使用多个参数，从右至左依次执行关键字
+	whatday endmon lastyear			返回上年同期的月末
+
+3. 参数如果为 - ，从标准输入读一个基准日期
+	whatday beginmon | whatday +7 -		返回月初后的7天
+
+4. 参数如果为日期，返回指定的日期
+	whatday endday 20140326			返回2014-03-26 23:59:59
+'
+}
+
+main()
+{
+if [ $# -le 1 ]; then
+	p1=$1
+	today=`date +%Y%m%d`
+else
+	p1=$1
+	shift
+	today=`main $*`
+	if [ $? != 0 ]; then
+		exit $?
+	fi
+	today=`read_date $today`
+	if [ $? != 0 ]; then
+		exit $?
+	fi
+fi
+case "$p1" in
+""|"today" ) echo          $today;;		#默认为今天 
+"yesterday") get_prevdays  $today 1;;		#昨天
+"tomorrow" ) get_nextdays  $today 1;;		#明天
++[0-9]*    ) get_nextdays  $today `expr $p1 : "+\([0-9]*\)"`;; #加上天数
+-[0-9]*    ) get_prevdays  $today `expr $p1 : "-\([0-9]*\)"`;; #减去天数
+"lastyear" ) get_lastyear  $today;;		#上年同期
+"nextyear" ) get_nextyear  $today;;		#下年同期
+"lastmon"  ) get_lastmon   $today;;		#上月同期
+"nextmon"  ) get_nextmon   $today;;		#下月同期
+"beginmon" ) get_beginmon  $today;;		#月初
+"endmon"   ) get_endmon    $today;;		#月末
+"beginyear") get_beginyear $today;;		#年初
+"endyear"  ) get_endyear   $today;;		#年末
+"beginqtr" ) get_beginqtr  $today;;		#begin of season
+"endqtr"   ) get_endqtr    $today;;		#end of season
+"year"     ) get_year      $today;;		#年份
+"month"    ) get_month     $today;;		#月份
+"day"      ) get_day       $today;;		#日
+"beginday" ) get_time00    $today;;		#0点开始
+"endday"   ) get_time23    $today;;		#23点结束
+*          ) read_date $p1;  #读取指定的日期
+esac
+}
+
+if [ "$1" == "help" -o "$1" == "-h" ] ; then
+	help
+else
+	main $*
+fi
