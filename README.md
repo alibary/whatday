@@ -1,43 +1,54 @@
-#!/bin/sh 
-########################################################################
-#
-#         日期计算程序   蒋农 2006.7.3
-#
-# 本程序可以按指定的基准日期计算今天、昨天、明天、月初、月末、年初、年末
-# 等日期，并按YYYYMMDD格式返回，也可以取得指定日期的年、月、日。
-#
-# 语法：  whatday [计算关键字]...
-#
-# 帮助：  whatday help
-#
-########################################################################
+### 日期计算程序 V1.2.1 
+#### 蒋农 
 
-日期计算程序 V1.2.1 蒋农 (2014.8.6)
+本程序可以按指定的基准日期计算今天、昨天、明天、月初、月末、年初、年末等日期，并按YYYYMMDD格式返回，也可以取得指定日期的年、月、日。
 
-语法：whatday [关键字]...
+语法：
+```
+whatday [关键字]...
+```
 
 关键字：
-	(无)或today 今天 		beginyear   年初
-	yesterday   昨天 		endyear     年末
-	tomorrow    明天 		begineqtr   季初
-	+N(N为整数) N天以后 		endqtr      季末
-	-N(N为整数) N天以前 		beginmon    月初
-	lastyear    上年同期 		endmon      月末
-	nextyear    下年同期 		beginday    日初（0点0分0秒）
-	lastmon     上月同期 		endday      日末（23点59分59秒）
-	nextmon     下月同期 		year        年份
-	-	    从标准输入读入日期 	month       月份
-	(YYYYMMDD)   指定日期 		day         日
+```
+(无)或today 今天
+yesterday   昨天
+tomorrow    明天
++N(N为整数) N天以后
+-N(N为整数) N天以前
+lastyear    上年同期
+nextyear    下年同期
+lastmon     上月同期
+nextmon     下月同期
+-	    从标准输入读入日期
+(YYYYMMDD)   指定日期
+year        年份
+month       月份
+day         日
+beginyear   年初
+endyear     年末
+begineqtr   季初
+endqtr      季末
+beginmon    月初
+endmon      月末
+beginday    日初（0点0分0秒）
+endday      日末（23点59分59秒）
+help        显示帮助信息
+```
 
 示例：
 1. 没有任何参数，返回当天的日期
-	whatday                         	返回当天的日期
-
+```
+whatday #返回当天的日期
+```
 2. 使用多个参数，从右至左依次执行关键字
-	whatday endmon lastyear			返回上年同期的月末
-
+```
+whatday endmon lastyear #返回上年同期的月末
+```
 3. 参数如果为 - ，从标准输入读一个基准日期
-	whatday beginmon | whatday +7 -		返回月初后的7天
-
+```
+whatday beginmon | whatday +7 - #返回月初后的7天
+```
 4. 参数如果为日期，返回指定的日期
-	whatday endday 20140326			返回2014-03-26 23:59:59
+```
+whatday endday 20140326 #返回2014-03-26 23:59:59
+```
