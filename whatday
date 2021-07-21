@@ -20,6 +20,7 @@
 # 2014.3.25 增加了下年、下月
 # 2014.3.26 可使用任意多个参数，从右至左依次计算日期
 # 2014.8.6  将错误信息输出到标准错误输出
+# 2021.7.20 增加了星期功能
 ########################################################################
 
 get_date()
@@ -172,8 +173,70 @@ get_endqtr()
     esac
 }
 
+#1:theday, 2:weekday(1-7)
+get_weekday()
+{
+	today=`date +%Y%m%d`
+	weekday=`date +%u`
+	days=`get_days $today $1`
+	weektheday=`expr \( $days + $weekday - 1 \) % 7`
+	if [ $weektheday -lt 0 ]; then
+		weektheday=`expr $weektheday + 7`
+	fi
+	offset=`expr $2 - $weektheday - 1`
+	get_nextdays $1 $offset
+}
+
+#days between d1 and d2
+get_days()
+{
+	y1=`get_year $1`
+	m1=`get_month $1`
+	d1=`get_day $1`
+	y2=`get_year $2`
+	m2=`get_month $2`
+	d2=`get_day $2`
+
+	days=`expr $d2 - $d1`
+	mons=`expr $y2 \* 12 + $m2 - $y1 \* 12 - $m1`
+	if [ $mons -gt 0 ]; then
+		while [ $mons -gt 0 ]; do
+			if [ $m2 -le 1 ]; then
+				m2=12
+				y2=`expr $y2 - 1`
+			else
+				m2=`expr $m2 - 1`
+			fi
+			mondays=`get_mon_days $y2 $m2`
+			days=`expr $days + $mondays`
+			mons=`expr $y2 \* 12 + $m2 - $y1 \* 12 - $m1`
+		done
+	elif [ $mons -lt 0 ]; then
+		while [ $mons -lt 0 ]; do
+			if [ $m2 -ge 12 ]; then
+				m2=1
+				y2=`expr $y2 + 1`
+			else
+				m2=`expr $m2 + 1`
+			fi
+			mondays=`get_mon_days $y2 $m2`
+			days=`expr $days - $mondays`
+			mons=`expr $y2 \* 12 + $m2 - $y1 \* 12 - $m1`
+		done
+	fi	
+	echo $days
+}
+
+#theday + days
 get_nextdays()
 {
+	if [ $2 -eq 0 ]; then
+		echo $1
+	elif [ $2 -lt 0 ]; then
+		days=`expr 0 - $2`
+		get_prevdays $1 $days
+	else
+
  	Y=`get_year $1`
  	M=`get_month $1`
  	D=`get_day $1`
@@ -199,10 +262,20 @@ get_nextdays()
 	done
 
  	get_date $Y $M $D
+
+	fi
 }
 
+#theday - days
 get_prevdays()
 {
+	if [ $2 -eq 0 ]; then
+		echo $1
+	elif [ $2 -lt 0 ]; then
+		days=`expr 0 - $2`
+		get_nextdays $1 $days
+	else
+
  	Y=`get_year $1`
  	M=`get_month $1`
  	D=`get_day $1`
@@ -227,6 +300,8 @@ get_prevdays()
 	done
 
  	get_date $Y $M $D
+
+	fi
 }
 
 get_lastyear()
@@ -341,35 +416,43 @@ formaterr()
 help()
 {
 echo '
-日期计算程序 V1.2.1 蒋农 (2014.8.6)
+日期计算程序 V1.2.2 蒋农 (2021.7.20)
 
 语法：whatday [关键字]...
 
 关键字：
-	(无)或today 今天 		beginyear   年初
-	yesterday   昨天 		endyear     年末
-	tomorrow    明天 		begineqtr   季初
-	+N(N为整数) N天以后 		endqtr      季末
-	-N(N为整数) N天以前 		beginmon    月初
-	lastyear    上年同期 		endmon      月末
-	nextyear    下年同期 		beginday    日初（0点0分0秒）
-	lastmon     上月同期 		endday      日末（23点59分59秒）
+	(无)或today 今天		monday      星期一
+	yesterday   昨天		tuesday     星期二
+	tomorrow    明天		wednesday   星期三
+	+N(N为整数) N天以后		thursday    星期四
+	-N(N为整数) N天以前		friday      星期五
+	lastyear    上年同期		saturday    星期六
+	nextyear    下年同期		sunday      星期日
+	lastmon     上月同期
 	nextmon     下月同期 		year        年份
-	-	    从标准输入读入日期 	month       月份
-	(YYYYMMDD)   指定日期 		day         日
+	beginyear   年初		month       月份
+	endyear     年末		day         日
+ 	beginqtr    季初		beginday    日初（0点0分0秒）
+ 	endqtr      季末		endday      日末（23点59分59秒）
+ 	beginmon    月初		-	     读入日期
+ 	endmon      月末		(YYYYMMDD)   指定日期 
+
 
 示例：
 1. 没有任何参数，返回当天的日期
-	whatday                         	返回当天的日期
+	whatday                          #返回当天的日期
 
-2. 使用多个参数，从右至左依次执行关键字
-	whatday endmon lastyear			返回上年同期的月末
+2. 使用一个参数，返回以当天为基准的日期
+	whatday lastyear                 #返回上年同期
 
-3. 参数如果为 - ，从标准输入读一个基准日期
-	whatday beginmon | whatday +7 -		返回月初后的7天
+3. 使用多个参数，从右至左依次执行关键字
+	whatday endmon lastyear         #返回上年同期的月末
 
-4. 参数如果为日期，返回指定的日期
-	whatday endday 20140326			返回2014-03-26 23:59:59
+4. 参数如果为 - ，从标准输入读一个基准日期
+	whatday beginmon | whatday +7 -  #返回月初后的7天
+
+5. 参数如果为日期，返回指定的日期
+	whatday endday 20140326          #返回2014-03-26 23:59:59
 '
 }
 
@@ -406,6 +489,13 @@ case "$p1" in
 "endyear"  ) get_endyear   $today;;		#年末
 "beginqtr" ) get_beginqtr  $today;;		#begin of season
 "endqtr"   ) get_endqtr    $today;;		#end of season
+"monday"   ) get_weekday   $today 1;;		#get weekdays
+"tuesday"  ) get_weekday   $today 2;;		
+"wednesday") get_weekday   $today 3;;		
+"thursday" ) get_weekday   $today 4;;		
+"friday"   ) get_weekday   $today 5;;		
+"saturday" ) get_weekday   $today 6;;		
+"sunday"   ) get_weekday   $today 7;;		
 "year"     ) get_year      $today;;		#年份
 "month"    ) get_month     $today;;		#月份
 "day"      ) get_day       $today;;		#日
