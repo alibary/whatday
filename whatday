@@ -1,26 +1,26 @@
 #!/bin/sh 
 ########################################################################
 #
-#         ÈÕÆÚ¼ÆËã³ÌĞò   ½¯Å© 2006.7.3
+#         æ—¥æœŸè®¡ç®—ç¨‹åº   è’‹å†œ 2006.7.3
 #
-# ±¾³ÌĞò¿ÉÒÔ°´Ö¸¶¨µÄ»ù×¼ÈÕÆÚ¼ÆËã½ñÌì¡¢×òÌì¡¢Ã÷Ìì¡¢ÔÂ³õ¡¢ÔÂÄ©¡¢Äê³õ¡¢ÄêÄ©
-# µÈÈÕÆÚ£¬²¢°´YYYYMMDD¸ñÊ½·µ»Ø£¬Ò²¿ÉÒÔÈ¡µÃÖ¸¶¨ÈÕÆÚµÄÄê¡¢ÔÂ¡¢ÈÕ¡£
+# æœ¬ç¨‹åºå¯ä»¥æŒ‰æŒ‡å®šçš„åŸºå‡†æ—¥æœŸè®¡ç®—ä»Šå¤©ã€æ˜¨å¤©ã€æ˜å¤©ã€æœˆåˆã€æœˆæœ«ã€å¹´åˆã€å¹´æœ«
+# ç­‰æ—¥æœŸï¼Œå¹¶æŒ‰YYYYMMDDæ ¼å¼è¿”å›ï¼Œä¹Ÿå¯ä»¥å–å¾—æŒ‡å®šæ—¥æœŸçš„å¹´ã€æœˆã€æ—¥ã€‚
 #
-# Óï·¨£º  whatday [¼ÆËã¹Ø¼ü×Ö]...
+# è¯­æ³•ï¼š  whatday [è®¡ç®—å…³é”®å­—]...
 #
-# °ïÖú£º  whatday help
+# å¸®åŠ©ï¼š  whatday help
 #
-# ¸üĞÂ¼ÇÂ¼£º
-# 2010.7.1 Ôö¼ÓÁË¼ÆËãNÌìÒÔºó»òNÌìÒÔÇ°µÄÈÕÆÚµÄ¹¦ÄÜ
-# 2010.7.1 Ôö¼ÓÁËÉÏÔÂÍ¬ÆÚ¹¦ÄÜ
-# 2010.7.1 Ìá¸ßÁË¼ÆËãĞ§ÂÊ
-# 2011.2.19 Ôö¼ÓÁË¼¾³õ¼¾Ä©
-# 2011.9.20 Ôö¼ÓÁËÊ±¼ä£º0:0:0-23£º59£º59
-# 2013.2.18 ĞŞÕıÁËÉÏÄêÍ¬ÆÚÖĞÓĞ¹ØÈòÄêµÄ¶¨Òå£º lastyear(2013-2-28)=2012-2-29
-# 2014.3.25 Ôö¼ÓÁËÏÂÄê¡¢ÏÂÔÂ
-# 2014.3.26 ¿ÉÊ¹ÓÃÈÎÒâ¶à¸ö²ÎÊı£¬´ÓÓÒÖÁ×óÒÀ´Î¼ÆËãÈÕÆÚ
-# 2014.8.6  ½«´íÎóĞÅÏ¢Êä³öµ½±ê×¼´íÎóÊä³ö
-# 2021.7.20 Ôö¼ÓÁËĞÇÆÚ¹¦ÄÜ
+# æ›´æ–°è®°å½•ï¼š
+# 2010.7.1 å¢åŠ äº†è®¡ç®—Nå¤©ä»¥åæˆ–Nå¤©ä»¥å‰çš„æ—¥æœŸçš„åŠŸèƒ½
+# 2010.7.1 å¢åŠ äº†ä¸ŠæœˆåŒæœŸåŠŸèƒ½
+# 2010.7.1 æé«˜äº†è®¡ç®—æ•ˆç‡
+# 2011.2.19 å¢åŠ äº†å­£åˆå­£æœ«
+# 2011.9.20 å¢åŠ äº†æ—¶é—´ï¼š0:0:0-23ï¼š59ï¼š59
+# 2013.2.18 ä¿®æ­£äº†ä¸Šå¹´åŒæœŸä¸­æœ‰å…³é—°å¹´çš„å®šä¹‰ï¼š lastyear(2013-2-28)=2012-2-29
+# 2014.3.25 å¢åŠ äº†ä¸‹å¹´ã€ä¸‹æœˆ
+# 2014.3.26 å¯ä½¿ç”¨ä»»æ„å¤šä¸ªå‚æ•°ï¼Œä»å³è‡³å·¦ä¾æ¬¡è®¡ç®—æ—¥æœŸ
+# 2014.8.6  å°†é”™è¯¯ä¿¡æ¯è¾“å‡ºåˆ°æ ‡å‡†é”™è¯¯è¾“å‡º
+# 2021.7.20 å¢åŠ äº†æ˜ŸæœŸåŠŸèƒ½
 ########################################################################
 
 get_date()
@@ -66,7 +66,7 @@ get_year_days()
    	r1=`expr $Y % 4`
    	r2=`expr $Y % 100`
    	r3=`expr $Y % 400`
-    	if [ r1 -eq 0 -a r2 -ne 0 -o r3 -eq 0 ]; then
+    	if [ $r1 -eq 0 -a $r2 -ne 0 -o $r3 -eq 0 ]; then
         	days=366
     	else
         	days=365
@@ -96,21 +96,21 @@ get_prevyear_days()
 
 get_mon_days()
 {
-		Y=$1
-		M=$2
+	Y=$1
+	M=$2
         case $M in
         1|01|3|03|5|05|7|07|8|08|10|12) 
-			days=31;;
+		days=31;;
         4|04|6|06|9|09|11) 
-			days=30;;
-		2|02)
-			if [ `get_year_days $Y` -eq 366 ]; then
+		days=30;;
+	2|02)
+		if [ `get_year_days $Y` -eq 366 ]; then
                         days=29
-            else
+		else
                         days=28
-            fi ;;
-		*) 
-			days=0;;
+		fi ;;
+	*) 
+		days=0;;
         esac
         echo $days
 }
@@ -201,26 +201,26 @@ get_days()
 	mons=`expr $y2 \* 12 + $m2 - $y1 \* 12 - $m1`
 	if [ $mons -gt 0 ]; then
 		while [ $mons -gt 0 ]; do
+			mondays=`get_mon_days $y2 $m2`
+			days=`expr $days + $mondays`
 			if [ $m2 -le 1 ]; then
 				m2=12
 				y2=`expr $y2 - 1`
 			else
 				m2=`expr $m2 - 1`
 			fi
-			mondays=`get_mon_days $y2 $m2`
-			days=`expr $days + $mondays`
 			mons=`expr $y2 \* 12 + $m2 - $y1 \* 12 - $m1`
 		done
 	elif [ $mons -lt 0 ]; then
 		while [ $mons -lt 0 ]; do
+			mondays=`get_mon_days $y2 $m2`
+			days=`expr $days - $mondays`
 			if [ $m2 -ge 12 ]; then
 				m2=1
 				y2=`expr $y2 + 1`
 			else
 				m2=`expr $m2 + 1`
 			fi
-			mondays=`get_mon_days $y2 $m2`
-			days=`expr $days - $mondays`
 			mons=`expr $y2 \* 12 + $m2 - $y1 \* 12 - $m1`
 		done
 	fi	
@@ -409,50 +409,50 @@ read_date()
 
 formaterr()
 {
-	echo "ÈÕÆÚ¸ñÊ½´íÎó. whatday help »ñµÃ°ïÖú" >&2
+	echo "æ—¥æœŸæ ¼å¼é”™è¯¯. whatday help è·å¾—å¸®åŠ©" >&2
 	exit 1
 }
 
 help()
 {
 echo '
-ÈÕÆÚ¼ÆËã³ÌĞò V1.2.2 ½¯Å© (2021.7.20)
+æ—¥æœŸè®¡ç®—ç¨‹åº V1.2.2 è’‹å†œ (2021.7.20)
 
-Óï·¨£ºwhatday [¹Ø¼ü×Ö]...
+è¯­æ³•ï¼šwhatday [å…³é”®å­—]...
 
-¹Ø¼ü×Ö£º
-	(ÎŞ)»òtoday ½ñÌì		monday      ĞÇÆÚÒ»
-	yesterday   ×òÌì		tuesday     ĞÇÆÚ¶ş
-	tomorrow    Ã÷Ìì		wednesday   ĞÇÆÚÈı
-	+N(NÎªÕûÊı) NÌìÒÔºó		thursday    ĞÇÆÚËÄ
-	-N(NÎªÕûÊı) NÌìÒÔÇ°		friday      ĞÇÆÚÎå
-	lastyear    ÉÏÄêÍ¬ÆÚ		saturday    ĞÇÆÚÁù
-	nextyear    ÏÂÄêÍ¬ÆÚ		sunday      ĞÇÆÚÈÕ
-	lastmon     ÉÏÔÂÍ¬ÆÚ
-	nextmon     ÏÂÔÂÍ¬ÆÚ 		year        Äê·İ
-	beginyear   Äê³õ		month       ÔÂ·İ
-	endyear     ÄêÄ©		day         ÈÕ
- 	beginqtr    ¼¾³õ		beginday    ÈÕ³õ£¨0µã0·Ö0Ãë£©
- 	endqtr      ¼¾Ä©		endday      ÈÕÄ©£¨23µã59·Ö59Ãë£©
- 	beginmon    ÔÂ³õ		-	     ¶ÁÈëÈÕÆÚ
- 	endmon      ÔÂÄ©		(YYYYMMDD)   Ö¸¶¨ÈÕÆÚ 
+å…³é”®å­—ï¼š
+	(æ— )æˆ–today ä»Šå¤©		monday      æ˜ŸæœŸä¸€
+	yesterday   æ˜¨å¤©		tuesday     æ˜ŸæœŸäºŒ
+	tomorrow    æ˜å¤©		wednesday   æ˜ŸæœŸä¸‰
+	+N(Nä¸ºæ•´æ•°) Nå¤©ä»¥å		thursday    æ˜ŸæœŸå››
+	-N(Nä¸ºæ•´æ•°) Nå¤©ä»¥å‰		friday      æ˜ŸæœŸäº”
+	lastyear    ä¸Šå¹´åŒæœŸ		saturday    æ˜ŸæœŸå…­
+	nextyear    ä¸‹å¹´åŒæœŸ		sunday      æ˜ŸæœŸæ—¥
+	lastmon     ä¸ŠæœˆåŒæœŸ
+	nextmon     ä¸‹æœˆåŒæœŸ 		year        å¹´ä»½
+	beginyear   å¹´åˆ		month       æœˆä»½
+	endyear     å¹´æœ«		day         æ—¥
+ 	beginqtr    å­£åˆ		beginday    æ—¥åˆï¼ˆ0ç‚¹0åˆ†0ç§’ï¼‰
+ 	endqtr      å­£æœ«		endday      æ—¥æœ«ï¼ˆ23ç‚¹59åˆ†59ç§’ï¼‰
+ 	beginmon    æœˆåˆ		-	     è¯»å…¥æ—¥æœŸ
+ 	endmon      æœˆæœ«		(YYYYMMDD)   æŒ‡å®šæ—¥æœŸ 
 
 
-Ê¾Àı£º
-1. Ã»ÓĞÈÎºÎ²ÎÊı£¬·µ»Øµ±ÌìµÄÈÕÆÚ
-	whatday                          #·µ»Øµ±ÌìµÄÈÕÆÚ
+ç¤ºä¾‹ï¼š
+1. æ²¡æœ‰ä»»ä½•å‚æ•°ï¼Œè¿”å›å½“å¤©çš„æ—¥æœŸ
+	whatday                          #è¿”å›å½“å¤©çš„æ—¥æœŸ
 
-2. Ê¹ÓÃÒ»¸ö²ÎÊı£¬·µ»ØÒÔµ±ÌìÎª»ù×¼µÄÈÕÆÚ
-	whatday lastyear                 #·µ»ØÉÏÄêÍ¬ÆÚ
+2. ä½¿ç”¨ä¸€ä¸ªå‚æ•°ï¼Œè¿”å›ä»¥å½“å¤©ä¸ºåŸºå‡†çš„æ—¥æœŸ
+	whatday lastyear                 #è¿”å›ä¸Šå¹´åŒæœŸ
 
-3. Ê¹ÓÃ¶à¸ö²ÎÊı£¬´ÓÓÒÖÁ×óÒÀ´ÎÖ´ĞĞ¹Ø¼ü×Ö
-	whatday endmon lastyear         #·µ»ØÉÏÄêÍ¬ÆÚµÄÔÂÄ©
+3. ä½¿ç”¨å¤šä¸ªå‚æ•°ï¼Œä»å³è‡³å·¦ä¾æ¬¡æ‰§è¡Œå…³é”®å­—
+	whatday endmon lastyear         #è¿”å›ä¸Šå¹´åŒæœŸçš„æœˆæœ«
 
-4. ²ÎÊıÈç¹ûÎª - £¬´Ó±ê×¼ÊäÈë¶ÁÒ»¸ö»ù×¼ÈÕÆÚ
-	whatday beginmon | whatday +7 -  #·µ»ØÔÂ³õºóµÄ7Ìì
+4. å‚æ•°å¦‚æœä¸º - ï¼Œä»æ ‡å‡†è¾“å…¥è¯»ä¸€ä¸ªåŸºå‡†æ—¥æœŸ
+	whatday beginmon | whatday +7 -  #è¿”å›æœˆåˆåçš„7å¤©
 
-5. ²ÎÊıÈç¹ûÎªÈÕÆÚ£¬·µ»ØÖ¸¶¨µÄÈÕÆÚ
-	whatday endday 20140326          #·µ»Ø2014-03-26 23:59:59
+5. å‚æ•°å¦‚æœä¸ºæ—¥æœŸï¼Œè¿”å›æŒ‡å®šçš„æ—¥æœŸ
+	whatday endday 20140326          #è¿”å›2014-03-26 23:59:59
 '
 }
 
@@ -474,19 +474,19 @@ else
 	fi
 fi
 case "$p1" in
-""|"today" ) echo          $today;;		#Ä¬ÈÏÎª½ñÌì 
-"yesterday") get_prevdays  $today 1;;		#×òÌì
-"tomorrow" ) get_nextdays  $today 1;;		#Ã÷Ìì
-+[0-9]*    ) get_nextdays  $today `expr $p1 : "+\([0-9]*\)"`;; #¼ÓÉÏÌìÊı
--[0-9]*    ) get_prevdays  $today `expr $p1 : "-\([0-9]*\)"`;; #¼õÈ¥ÌìÊı
-"lastyear" ) get_lastyear  $today;;		#ÉÏÄêÍ¬ÆÚ
-"nextyear" ) get_nextyear  $today;;		#ÏÂÄêÍ¬ÆÚ
-"lastmon"  ) get_lastmon   $today;;		#ÉÏÔÂÍ¬ÆÚ
-"nextmon"  ) get_nextmon   $today;;		#ÏÂÔÂÍ¬ÆÚ
-"beginmon" ) get_beginmon  $today;;		#ÔÂ³õ
-"endmon"   ) get_endmon    $today;;		#ÔÂÄ©
-"beginyear") get_beginyear $today;;		#Äê³õ
-"endyear"  ) get_endyear   $today;;		#ÄêÄ©
+""|"today" ) echo          $today;;		#é»˜è®¤ä¸ºä»Šå¤© 
+"yesterday") get_prevdays  $today 1;;		#æ˜¨å¤©
+"tomorrow" ) get_nextdays  $today 1;;		#æ˜å¤©
++[0-9]*    ) get_nextdays  $today `expr $p1 : "+\([0-9]*\)"`;; #åŠ ä¸Šå¤©æ•°
+-[0-9]*    ) get_prevdays  $today `expr $p1 : "-\([0-9]*\)"`;; #å‡å»å¤©æ•°
+"lastyear" ) get_lastyear  $today;;		#ä¸Šå¹´åŒæœŸ
+"nextyear" ) get_nextyear  $today;;		#ä¸‹å¹´åŒæœŸ
+"lastmon"  ) get_lastmon   $today;;		#ä¸ŠæœˆåŒæœŸ
+"nextmon"  ) get_nextmon   $today;;		#ä¸‹æœˆåŒæœŸ
+"beginmon" ) get_beginmon  $today;;		#æœˆåˆ
+"endmon"   ) get_endmon    $today;;		#æœˆæœ«
+"beginyear") get_beginyear $today;;		#å¹´åˆ
+"endyear"  ) get_endyear   $today;;		#å¹´æœ«
 "beginqtr" ) get_beginqtr  $today;;		#begin of season
 "endqtr"   ) get_endqtr    $today;;		#end of season
 "monday"   ) get_weekday   $today 1;;		#get weekdays
@@ -496,12 +496,12 @@ case "$p1" in
 "friday"   ) get_weekday   $today 5;;		
 "saturday" ) get_weekday   $today 6;;		
 "sunday"   ) get_weekday   $today 7;;		
-"year"     ) get_year      $today;;		#Äê·İ
-"month"    ) get_month     $today;;		#ÔÂ·İ
-"day"      ) get_day       $today;;		#ÈÕ
-"beginday" ) get_time00    $today;;		#0µã¿ªÊ¼
-"endday"   ) get_time23    $today;;		#23µã½áÊø
-*          ) read_date $p1;  #¶ÁÈ¡Ö¸¶¨µÄÈÕÆÚ
+"year"     ) get_year      $today;;		#å¹´ä»½
+"month"    ) get_month     $today;;		#æœˆä»½
+"day"      ) get_day       $today;;		#æ—¥
+"beginday" ) get_time00    $today;;		#0ç‚¹å¼€å§‹
+"endday"   ) get_time23    $today;;		#23ç‚¹ç»“æŸ
+*          ) read_date $p1;  #è¯»å–æŒ‡å®šçš„æ—¥æœŸ
 esac
 }
 
